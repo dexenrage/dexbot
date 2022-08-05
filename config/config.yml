@@ -1,0 +1,15 @@
+bot_name: DexBot
+bot_token: bot_token
+duration: 3h
+
+currency: ""
+
+db_name: database
+db_user: username
+db_pass: password
+db_host: 127.0.0.1
+db_port: 5432
+
+css_elements: ""
+
+allowed_links: ""
