@@ -14,22 +14,34 @@
    limitations under the License.
 */
 
-package main
+package config
 
-const (
-	errCreateDir = `Can't create %s directory: %v`
-	errZapInit   = `Can't initialize zap logger: %v`
+import (
+	"dexbot/catcherr"
+	"strings"
 
-	errLoadingConfig = `error loading config: %v`
-
-	errGetWorkDir = `Error getting workdir: %v`
-
-	errDatabaseConnection = `Database connection error: %v`
-	errParsingDatabaseURI = `Error parsing database URI: %v`
-
-	errURLNotAllowed = `[ %s ]: URL not allowed`
-	errOutOfRange    = `[ %s ]: index out of range`
-
-	errHTTPStatusCode   = `Parse: HTTP status code for %s is not 200. Status code: %d`
-	errCannotParsePrice = `Parse: Cannot parse price for %s`
+	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
 )
+
+var cfg *koanf.Koanf
+
+const DefaultSeparator = ` `
+
+func init() {
+	cfg = koanf.New(`.`)
+	file := file.Provider(`config.yml`)
+
+	err := cfg.Load(file, yaml.Parser())
+	catcherr.HandleError(err)
+}
+
+func String(path string) string {
+	return cfg.String(path)
+}
+
+func StringSlice(path string, sep string) []string {
+	s := String(path)
+	return strings.Split(s, sep)
+}
